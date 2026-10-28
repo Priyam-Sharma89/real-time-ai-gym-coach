@@ -84,10 +84,11 @@ def add_exercise(user_id, exercise_name, reps, sets, time): # Agr user ka Time S
                 INSERT INTO exercises (user_id, exercise_name, sets, reps, time)
                 VALUES (?, ?, ?, ?, ?)
             """, (user_id, exercise_name, sets, reps, time))
+
 def get_users_exercises(user_id):
     conn = _get_connection()
 
     return conn.execute("""
         SELECT * FROM exercises 
         WHERE user_id = ?
-    """, (user_id)).fetchall()
+    """, (user_id,)).fetchall()

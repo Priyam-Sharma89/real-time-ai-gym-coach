@@ -22,10 +22,10 @@ class LLMCoach:
         response = self.client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=messages,
-            temparature=0.4
+            temperature=0.4
         )
 
-        text = response.choises[0].message.content.strip()
+        text = response.choices[0].message.content.strip()
 
         self.history.append({"role": "assistant", "content": text})
 

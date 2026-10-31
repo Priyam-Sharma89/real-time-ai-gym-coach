@@ -1,4 +1,6 @@
 import streamlit as st
+from pathlib import Path
+from dotenv import load_dotenv
 import os
 import time
 import pandas as pd
@@ -18,12 +20,15 @@ from services.coaching.llm import LLMCoach
 from services.coaching.tts import TextToSpeech
 from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
 
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
+
 
 
 
 def main():
     st.set_page_config(
-        page_title="Real Time AI Gym Coach", # icon baad me dalunga Ok Priyam , , Ab kal waal pr kaam 
+        page_title="Real Time AI Gym Coach", # icon baad me dalunga Ok  , , Ab kal waal pr kaam 
         initial_sidebar_state="expanded",
         layout="centered" # Man hua to Change krunga future me , Kyuki need H 
     )
@@ -42,17 +47,24 @@ def main():
 
     if "voice_pipeline" not in st.session_state:
         try:
-            api_key = os.environ.get("GROQ_API_KEY", "")
+            api_key = os.getenv("GROQ_API_KEY")
 
-            if not api_key and hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
-                api_key = st.secrets["GROQ_API_KEY"]
-            
+            if not api_key:
+                raise ValueError("GROQ_API_KEY is missing from .env")
+
             groq_client = Groq(api_key=api_key)
+
             llm_coach = LLMCoach(groq_client)
             tts = TextToSpeech()
-            st.session_state.voice_pipeline = VoicePipeline(llm_coach, tts)
+
+            st.session_state.voice_pipeline = VoicePipeline(
+                llm_coach,
+                tts
+            )
+
         except Exception as e:
             st.session_state.voice_pipeline = None
+            st.error(f"Voice initialization failed: {e}")
 
     workout_started = st.session_state.get("workout_started", False)
     

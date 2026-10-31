@@ -1,8 +1,7 @@
 import streamlit as st
+import time
 from services.config.workout_config import METRICS_FIELDS
 from services.persistence.exercise_repository import add_exercise
-import time
-
 
 
 def sync_metrics_update(context):

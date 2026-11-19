@@ -30,6 +30,5 @@ Thumbs.db
 .vscode/
 # Do not upload these files
 .streamlit/config.toml
-ml_models/
 tut-info/
 v2.txt
